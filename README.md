@@ -1,0 +1,1 @@
+# Calculadora-de-progresion-1.2
