@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rutina Completa | Entrenador Osneider</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #08080b;
+  --surf:    #0f0f14;
+  --card:    #131318;
+  --card2:   #18181f;
+  --border:  #22222c;
+  --border2: #1a1a22;
+  --accent:  #c8ff00;
+  --blue:    #4d9fff;
+  --orange:  #ff9500;
+  --red:     #ff3c3c;
+  --purple:  #a855f7;
+  --text:    #efefef;
+  --muted:   #55556a;
+  --muted2:  #33333f;
+  --display: 'Bebas Neue', sans-serif;
+  --mono:    'JetBrains Mono', monospace;
+  --body:    'DM Sans', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--body);min-height:100vh;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(200,255,0,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(200,255,0,.02) 1px,transparent 1px);background-size:44px 44px;pointer-events:none;z-index:0}
+
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:36px 20px 100px}
+
+/* HEADER */
+header{text-align:center;margin-bottom:44px;animation:fadeDown .6s ease both}
+.chip{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);background:rgba(200,255,0,.06);border:1px solid rgba(200,255,0,.15);padding:5px 16px;border-radius:2px;margin-bottom:18px}
+.chip-dot{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+h1{font-family:var(--display);font-size:clamp(44px,8vw,88px);letter-spacing:.04em;line-height:.9}
+h1 em{color:var(--accent);font-style:normal}
+.sub{margin-top:12px;color:var(--muted);font-size:13px;font-weight:300;letter-spacing:.05em}
+
+/* GLOBAL CONFIG */
+.global-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:28px 32px;margin-bottom:24px;animation:fadeUp .5s .05s ease both}
+.sec-label{font-family:var(--mono);font-size:9px;letter-spacing:.25em;text-transform:uppercase;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.global-grid{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:14px;align-items:end}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-family:var(--mono);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.field label .req{color:var(--accent)}
+input,select{background:var(--surf);border:1px solid var(--border);color:var(--text);font-family:var(--mono);font-size:14px;padding:10px 13px;border-radius:3px;outline:none;transition:border-color .2s,box-shadow .2s;width:100%;-webkit-appearance:none}
+input:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(200,255,0,.07)}
+input.invalid{border-color:var(--red)!important}
+select option{background:var(--card)}
+.irow{display:flex}
+.irow input{border-radius:3px 0 0 3px;border-right:none;flex:1}
+.irow select{border-radius:0 3px 3px 0;width:auto;min-width:56px;background:var(--card2);padding:0 8px}
+.toggle-row{display:flex;align-items:center;gap:14px;padding:13px 16px;background:var(--surf);border:1px solid var(--border);border-radius:3px;margin-top:14px}
+.toggle-label{flex:1;font-size:12.5px}
+.toggle-label small{display:block;color:var(--muted);font-size:10.5px;margin-top:2px}
+.tog{position:relative;width:40px;height:22px;flex-shrink:0}
+.tog input{opacity:0;width:0;height:0}
+.tog-track{position:absolute;inset:0;background:var(--border);border-radius:22px;cursor:pointer;transition:background .25s}
+.tog-track::after{content:'';position:absolute;left:3px;top:3px;width:16px;height:16px;background:var(--muted);border-radius:50%;transition:transform .25s,background .25s}
+.tog input:checked+.tog-track{background:rgba(200,255,0,.15)}
+.tog input:checked+.tog-track::after{transform:translateX(18px);background:var(--accent)}
+
+/* EXERCISE LIST */
+.ex-list-card{background:var(--card);border:1px solid var(--border);border-radius:4px;padding:28px 32px;margin-bottom:24px;animation:fadeUp .5s .1s ease both}
+.ex-list{display:flex;flex-direction:column;gap:10px;margin-bottom:18px}
+
+/* EXERCISE ROW */
+.ex-row{background:var(--surf);border:1px solid var(--border);border-radius:3px;overflow:hidden;transition:border-color .2s}
+.ex-row:hover{border-color:var(--border2)}
+.ex-row-header{display:grid;grid-template-columns:28px 1fr auto auto auto auto auto;gap:10px;align-items:center;padding:12px 14px}
+.ex-num{font-family:var(--display);font-size:18px;color:var(--muted);text-align:center}
+.ex-name-input{background:transparent;border:none;border-bottom:1px solid var(--border);border-radius:0;font-family:var(--body);font-size:14px;font-weight:500;color:var(--text);padding:4px 2px;width:100%}
+.ex-name-input:focus{border-bottom-color:var(--accent);box-shadow:none;outline:none}
+.ex-name-input::placeholder{color:var(--muted)}
+
+/* type toggle */
+.type-toggle{display:flex;gap:0;border:1px solid var(--border);border-radius:3px;overflow:hidden;flex-shrink:0}
+.type-btn{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:6px 10px;background:transparent;border:none;color:var(--muted);cursor:pointer;transition:all .18s;white-space:nowrap}
+.type-btn.active-comp{background:rgba(200,255,0,.1);color:var(--accent)}
+.type-btn.active-iso{background:rgba(77,159,255,.1);color:var(--blue)}
+
+/* level mini select */
+.lvl-mini{font-family:var(--mono);font-size:9px;padding:6px 8px;min-width:110px;background:var(--card2);border-color:var(--border)}
+.lvl-mini:focus{border-color:var(--accent)}
+
+/* param inputs inside row */
+.ex-param{font-family:var(--mono);font-size:12px;padding:6px 8px;width:70px;background:var(--card2);border-color:var(--border);text-align:center}
+.ex-param:focus{border-color:var(--accent)}
+.param-unit{font-family:var(--mono);font-size:9px;color:var(--muted);margin-left:2px}
+
+.del-btn{background:transparent;border:1px solid var(--border2);color:var(--muted2);border-radius:3px;width:28px;height:28px;cursor:pointer;font-size:14px;transition:all .2s;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.del-btn:hover{border-color:var(--red);color:var(--red)}
+
+/* comp extra fields */
+.ex-comp-extra{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;padding:10px 14px 14px 52px;border-top:1px solid var(--border2);background:rgba(200,255,0,.015)}
+.ex-iso-extra{display:none}
+.ex-comp-extra.hidden,.ex-iso-extra.hidden{display:none}
+
+.ex-field{display:flex;flex-direction:column;gap:5px}
+.ex-field label{font-family:var(--mono);font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.k-sug{font-family:var(--mono);font-size:9px;color:var(--accent);margin-top:3px}
+
+/* pct slider inline */
+.pct-wrap{display:flex;align-items:center;gap:8px}
+.pct-wrap input[type=range]{-webkit-appearance:none;height:3px;background:var(--border);border:none;border-radius:2px;padding:0;cursor:pointer;flex:1;width:80px}
+.pct-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;background:var(--accent);border-radius:50%;cursor:pointer}
+.pct-disp{font-family:var(--display);font-size:18px;color:var(--accent);min-width:40px}
+
+/* add button */
+.add-btn{width:100%;padding:11px;background:transparent;border:1px dashed var(--border);border-radius:3px;color:var(--muted);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.add-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(200,255,0,.03)}
+
+/* err */
+.err{color:var(--red);font-family:var(--mono);font-size:9px;margin-top:3px;display:none}
+.err.on{display:block}
+
+/* ACTION BUTTONS */
+.action-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px;animation:fadeUp .5s .15s ease both}
+.btn{font-family:var(--display);font-size:18px;letter-spacing:.1em;padding:14px 28px;border:none;border-radius:3px;cursor:pointer;transition:all .2s;flex:1;min-width:120px}
+.btn-primary{background:var(--accent);color:#000}
+.btn-primary:hover{background:#d4ff1a;transform:translateY(-1px);box-shadow:0 8px 28px rgba(200,255,0,.15)}
+.btn-secondary{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--muted);color:var(--text)}
+
+/* ═══ RESULT ═══ */
+#result{display:none}
+#result.on{display:block;animation:fadeUp .5s ease both}
+
+/* summary bar */
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:28px}
+.scard{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:14px 16px}
+.scard-lbl{font-family:var(--mono);font-size:8px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.scard-val{font-family:var(--display);font-size:28px;letter-spacing:.04em;color:var(--accent)}
+.scard-sub{font-family:var(--mono);font-size:8px;color:var(--muted);margin-top:2px}
+
+/* copy/print row */
+.top-actions{display:flex;justify-content:flex-end;gap:10px;margin-bottom:16px}
+.tbtn{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:8px 16px;background:transparent;border:1px solid var(--border);color:var(--muted);border-radius:3px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
+.tbtn:hover{border-color:var(--accent);color:var(--accent)}
+.tbtn.ok{border-color:#64dc64;color:#64dc64}
+
+/* ─ EXERCISE BLOCK ─ */
+.ex-block{margin-bottom:36px}
+.ex-block-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.ex-block-num{font-family:var(--display);font-size:36px;color:var(--muted2);line-height:1}
+.ex-block-info{}
+.ex-block-name{font-family:var(--display);font-size:22px;letter-spacing:.05em;line-height:1}
+.ex-block-tags{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap}
+.etag{font-family:var(--mono);font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:2px 8px;border-radius:2px}
+.etag-comp{color:var(--accent);background:rgba(200,255,0,.07);border:1px solid rgba(200,255,0,.15)}
+.etag-iso{color:var(--blue);background:rgba(77,159,255,.07);border:1px solid rgba(77,159,255,.15)}
+.etag-lvl-p{color:#64dc64;background:rgba(100,220,100,.07);border:1px solid rgba(100,220,100,.15)}
+.etag-lvl-i{color:var(--accent);background:rgba(200,255,0,.06);border:1px solid rgba(200,255,0,.12)}
+.etag-lvl-a{color:var(--red);background:rgba(255,60,60,.07);border:1px solid rgba(255,60,60,.15)}
+.etag-freq{color:var(--purple);background:rgba(168,85,247,.07);border:1px solid rgba(168,85,247,.15)}
+
+/* unified table */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:4px;margin-bottom:14px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead tr{background:#090910;border-bottom:1px solid var(--border)}
+thead th{font-family:var(--mono);font-size:8px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);padding:10px 13px;text-align:left;white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--border2);transition:background .15s}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:rgba(255,255,255,.012)}
+tbody td{padding:11px 13px;vertical-align:middle}
+
+.wk{font-family:var(--display);font-size:18px;color:var(--muted);line-height:1}
+.wk-sub{font-family:var(--mono);font-size:7px;letter-spacing:.12em;text-transform:uppercase;margin-top:1px}
+.d1c{color:var(--accent)}.d2c{color:var(--blue)}.dlc{color:var(--blue)}.isoc{color:var(--blue)}
+
+.day-badge{font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:2px}
+.db-f{color:var(--accent);background:rgba(200,255,0,.07);border:1px solid rgba(200,255,0,.13)}
+.db-h{color:var(--blue);background:rgba(77,159,255,.07);border:1px solid rgba(77,159,255,.13)}
+.db-d{color:var(--blue);background:rgba(77,159,255,.06);border:1px solid rgba(77,159,255,.1)}
+.db-i{color:var(--blue);background:rgba(77,159,255,.07);border:1px solid rgba(77,159,255,.13)}
+
+.vbig{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--text)}
+.vunit{font-family:var(--mono);font-size:8px;color:var(--muted);margin-left:2px}
+.ton{font-family:var(--mono);font-size:12px}
+.ton small{color:var(--muted);font-size:8px}
+
+.rpe{display:inline-block;font-family:var(--mono);font-size:9px;padding:2px 8px;border-radius:20px;font-weight:700;white-space:nowrap}
+.rpe-low {background:rgba(100,220,100,.09);color:#64dc64;border:1px solid rgba(100,220,100,.18)}
+.rpe-mid {background:rgba(200,255,0,.08);color:var(--accent);border:1px solid rgba(200,255,0,.15)}
+.rpe-high{background:rgba(255,149,0,.09);color:var(--orange);border:1px solid rgba(255,149,0,.18)}
+.rpe-peak{background:rgba(255,60,60,.09);color:var(--red);border:1px solid rgba(255,60,60,.18)}
+.rpe-dl  {background:rgba(77,159,255,.09);color:var(--blue);border:1px solid rgba(77,159,255,.18)}
+
+.focus{font-size:10.5px;color:var(--muted);max-width:150px;line-height:1.4}
+
+tr.r-d1{background:rgba(200,255,0,.02)}
+tr.r-d1 td:first-child{border-left:2px solid var(--accent);padding-left:11px}
+tr.r-d2{background:rgba(77,159,255,.015)}
+tr.r-d2 td:first-child{border-left:2px solid var(--blue);padding-left:11px}
+tr.r-peak{background:rgba(255,60,60,.03)!important}
+tr.r-peak td:first-child{border-left-color:var(--red)!important}
+tr.r-dl{background:rgba(77,159,255,.02)!important}
+tr.r-dl td:first-child{border-left:2px solid var(--blue);padding-left:11px}
+tr.r-sep td{padding:0;height:5px;background:rgba(0,0,0,.4);border-bottom:1px solid var(--border)}
+
+/* coach notes */
+.notes{border:1px solid var(--border);border-radius:4px;overflow:hidden;margin-bottom:8px}
+.notes-hd{background:#090910;padding:11px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.notes-hd .dot{width:6px;height:6px;background:var(--accent);border-radius:50%}
+.notes-hd h3{font-family:var(--display);font-size:15px;letter-spacing:.06em}
+.note-row{display:grid;grid-template-columns:60px 1fr;border-bottom:1px solid var(--border2)}
+.note-row:last-child{border-bottom:none}
+.note-wk{background:#090910;display:flex;align-items:center;justify-content:center;padding:12px;border-right:1px solid var(--border)}
+.note-wk span{font-family:var(--display);font-size:16px;color:var(--muted)}
+.note-cnt{padding:12px 16px}
+.note-ttl{font-family:var(--mono);font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:3px}
+.c1{color:#64dc64}.c2{color:var(--accent)}.c3{color:var(--orange)}.c4{color:var(--red)}.c5{color:var(--blue)}
+.note-txt{font-size:11px;color:var(--muted);line-height:1.65}
+
+/* routine divider */
+.routine-divider{display:flex;align-items:center;gap:16px;margin:40px 0 28px}
+.routine-divider .line{flex:1;height:1px;background:var(--border)}
+.routine-divider .label{font-family:var(--display);font-size:13px;letter-spacing:.15em;color:var(--muted2);white-space:nowrap}
+
+/* ANIMATIONS */
+@keyframes fadeDown{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+@media(max-width:700px){
+  .global-grid{grid-template-columns:1fr 1fr}
+  .ex-row-header{grid-template-columns:22px 1fr;gap:6px}
+  .ex-row-header .type-toggle,.ex-row-header .lvl-mini,.ex-row-header .del-btn{grid-column:2}
+  .ex-comp-extra{padding-left:14px}
+  thead th:nth-child(n+6){display:none}
+  tbody td:nth-child(n+6){display:none}
+  .vbig{font-size:13px}
+  .global-grid .field:nth-child(3){grid-column:1/-1}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<header>
+  <div class="chip"><span class="chip-dot"></span>Entrenador Osneider</div>
+  <h1>RUTINA<br><em>COMPLETA</em></h1>
+  <p class="sub">Progresión por ejercicio · Compuestos + Aislados · Bloque 4 semanas</p>
+</header>
+
+<!-- GLOBAL CONFIG -->
+<div class="global-card">
+  <div class="sec-label">Configuración Global</div>
+  <div class="global-grid">
+    <div class="field">
+      <label>Unidad Global</label>
+      <select id="g-unit" onchange="onGlobalUnit()">
+        <option value="kg">kg</option>
+        <option value="lb">lb</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>% Día 2 (Compuestos)</label>
+      <div class="pct-wrap" style="margin-top:2px">
+        <input type="range" id="g-pct" min="60" max="90" value="75" step="5" oninput="onGlobalPct(this.value)">
+        <span class="pct-disp" id="g-pct-disp">75%</span>
+      </div>
+    </div>
+    <div class="field">
+      <label>Nombre del Atleta</label>
+      <input type="text" id="g-atleta" placeholder="Nombre (opcional)">
+    </div>
+  </div>
+  <div class="toggle-row">
+    <div class="toggle-label">
+      Incluir Semana 5 — Deload para todos los ejercicios
+      <small>Descarga activa al ~55% del volumen. Recomendado tras cualquier bloque de 4 semanas.</small>
+    </div>
+    <label class="tog">
+      <input type="checkbox" id="g-deload" checked>
+      <span class="tog-track"></span>
+    </label>
+  </div>
+</div>
+
+<!-- EXERCISE LIST -->
+<div class="ex-list-card">
+  <div class="sec-label">Ejercicios de la Rutina</div>
+  <div class="ex-list" id="ex-list"></div>
+  <button class="add-btn" onclick="addExercise()">+ Añadir Ejercicio</button>
+</div>
+
+<!-- ACTIONS -->
+<div class="action-row">
+  <button class="btn btn-primary" onclick="generar()">⚡ Generar Rutina Completa</button>
+  <button class="btn btn-secondary" onclick="limpiar()">✕ Limpiar Todo</button>
+</div>
+
+<!-- RESULT -->
+<div id="result">
+  <div class="summary" id="summary"></div>
+  <div class="top-actions">
+    <button class="tbtn" id="btn-copy" onclick="copiar()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      Copiar Todo
+    </button>
+    <button class="tbtn" onclick="window.print()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Imprimir
+    </button>
+  </div>
+  <div id="routine-output"></div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+// ══════════════════════════════════════
+// DATA
+// ══════════════════════════════════════
+const K_SUG = {
+  principiante:{kg:2.5,lb:5},
+  intermedio:{kg:2.5,lb:5},
+  avanzado:{kg:1.25,lb:2.5}
+};
+
+const COMP = {
+  principiante:{
+    semanas:[
+      {rD1:'8', sΔD1:0,rpeD1:'7',   clD1:'rpe-low', rD2:'12',sΔD2:0,rpeD2:'6',   clD2:'rpe-low', eD1:'Patrón motor — técnica base',      eD2:'Volumen suave — consolidar'},
+      {rD1:'8', sΔD1:0,rpeD1:'7–8', clD1:'rpe-low', rD2:'12',sΔD2:0,rpeD2:'7',   clD2:'rpe-low', eD1:'Carga + técnica consolidada',       eD2:'Repetir el estímulo'},
+      {rD1:'6', sΔD1:0,rpeD1:'8',   clD1:'rpe-mid', rD2:'10',sΔD2:0,rpeD2:'7–8', clD2:'rpe-mid', eD1:'Primera tensión mecánica real',     eD2:'Sobrecarga hipertrófica'},
+      {rD1:'6', sΔD1:0,rpeD1:'8–9', clD1:'rpe-high',rD2:'10',sΔD2:1,rpeD2:'8',   clD2:'rpe-mid', eD1:'Pico de fuerza del bloque',         eD2:'Pico de volumen +1 serie',peak:true},
+    ],
+    notas:[
+      {t:'D1 S1 — PATRÓN MOTOR',c:'c1',n:'Aprende el movimiento con cargas manejables. 8 reps fija el patrón sin acumular fatiga técnica. Cada rep debe verse idéntica.'},
+      {t:'D2 S1 — VOLUMEN SUAVE',c:'c1',n:'El 75% del Día 1 sitúa la carga en la zona óptima de hipertrofia. 12 reps con control total. Calidad sobre cantidad.'},
+      {t:'D1 S2 — CARGA + TÉCNICA',c:'c2',n:'El patrón está más estable. Añadimos K de peso manteniendo el mismo volumen. El SNC consolida la coordinación.'},
+      {t:'D2 S2 — REPETIR ESTÍMULO',c:'c2',n:'Repetir el esquema con carga ligeramente mayor refuerza la adaptación. La consistencia es el mejor principio para el principiante.'},
+      {t:'D1 S3 — TENSIÓN MECÁNICA',c:'c3',n:'6 reps con más carga activa las fibras tipo II. El principiante experimenta aquí la sobrecarga real.'},
+      {t:'D2 S3 — SOBRECARGA HIPERTRÓFICA',c:'c3',n:'10 reps al 75% del peso del D1-S3 sitúa al atleta en la zona de máxima síntesis proteica.'},
+      {t:'D1 S4 — PICO DE FUERZA',c:'c4',n:'6 reps al límite técnico. El estímulo nervioso más alto del bloque. El cuerpo necesitará el deload para asimilarlo.'},
+      {t:'D2 S4 — PICO DE VOLUMEN',c:'c4',n:'Serie extra en hipertrofia. La combinación de pico D1 + pico volumen D2 maximiza el estrés adaptativo del bloque.'},
+    ]
+  },
+  intermedio:{
+    semanas:[
+      {rD1:'6', sΔD1:0,rpeD1:'7–8',clD1:'rpe-low', rD2:'10',sΔD2:0,rpeD2:'7',   clD2:'rpe-low', eD1:'Activación base — fuerza inicial',  eD2:'Hipertrofia — volumen base'},
+      {rD1:'5', sΔD1:0,rpeD1:'8',  clD1:'rpe-mid', rD2:'10',sΔD2:0,rpeD2:'8',   clD2:'rpe-mid', eD1:'Sobrecarga lineal de fuerza',       eD2:'Sobrecarga de volumen'},
+      {rD1:'4', sΔD1:0,rpeD1:'8–9',clD1:'rpe-high',rD2:'8', sΔD2:0,rpeD2:'8–9', clD2:'rpe-high',eD1:'Tensión mecánica máxima',           eD2:'Tensión + hipertrofia alta'},
+      {rD1:'3', sΔD1:1,rpeD1:'9–10',clD1:'rpe-peak',rD2:'8',sΔD2:1,rpeD2:'9',   clD2:'rpe-peak',eD1:'Overreaching — pico fuerza',        eD2:'Pico de volumen hipertrófico',peak:true},
+    ],
+    notas:[
+      {t:'D1 S1 — ACTIVACIÓN FUERZA',c:'c1',n:'6 reps con carga base. Activa el SNC y prepara los tendones para las cargas máximas que vienen.'},
+      {t:'D2 S1 — HIPERTROFIA BASE',c:'c1',n:'10 reps al 75% construye el volumen muscular que sustentará las ganancias de fuerza. No subestimes este día.'},
+      {t:'D1 S2 — SOBRECARGA LINEAL',c:'c2',n:'Menos reps, más peso. Cada kilo añadido representa una adaptación neuromuscular real para el intermedio.'},
+      {t:'D2 S2 — SOBRECARGA VOLUMEN',c:'c2',n:'El doble estímulo (fuerza D1 + volumen D2) genera una señal anabólica superior a entrenar solo un día.'},
+      {t:'D1 S3 — TENSIÓN MÁXIMA',c:'c3',n:'4 reps con la carga más alta hasta ahora. Esta zona recluta el máximo de unidades motoras. Técnica impecable.'},
+      {t:'D2 S3 — TENSIÓN + HIPERTROFIA',c:'c3',n:'8 reps al 75% de una carga alta crea tensión significativa. El músculo es atacado desde fuerza y volumen en la misma semana.'},
+      {t:'D1 S4 — OVERREACHING',c:'c4',n:'Serie extra + 3 reps al RPE 9–10. Overreaching voluntario y controlado. Sin deload sería sobreentrenamiento; con deload, es la clave del progreso.'},
+      {t:'D2 S4 — PICO HIPERTRÓFICO',c:'c4',n:'El volumen más alto del bloque. La acumulación total de trabajo de esta semana desencadenará la supercompensación durante el deload.'},
+    ]
+  },
+  avanzado:{
+    semanas:[
+      {rD1:'5', sΔD1:0,rpeD1:'7–8',clD1:'rpe-low', rD2:'10',sΔD2:0,rpeD2:'7–8',clD2:'rpe-low', eD1:'Potenciación basal — activación',   eD2:'Hipertrofia — activación'},
+      {rD1:'4', sΔD1:1,rpeD1:'8–9',clD1:'rpe-high',rD2:'8', sΔD2:1,rpeD2:'8–9',clD2:'rpe-high',eD1:'Sobrecarga + volumen fuerza',        eD2:'Volumen + intensidad sube'},
+      {rD1:'3', sΔD1:1,rpeD1:'9',  clD1:'rpe-peak',rD2:'6', sΔD2:1,rpeD2:'9',  clD2:'rpe-peak',eD1:'Tensión extrema — pico nervioso',   eD2:'Tensión hipertrófica máxima'},
+      {rD1:'2–3',sΔD1:2,rpeD1:'9–10',clD1:'rpe-peak',rD2:'6',sΔD2:2,rpeD2:'9–10',clD2:'rpe-peak',eD1:'Pico absoluto — fallo técnico',  eD2:'Pico volumen — fallo técnico',peak:true},
+    ],
+    notas:[
+      {t:'D1 S1 — POTENCIACIÓN BASAL',c:'c1',n:'Para el avanzado la semana 1 no es fácil: es potenciación post-deload. Activa el SNC sin generar deuda de fatiga antes del pico.'},
+      {t:'D2 S1 — HIPERTROFIA ACTIVACIÓN',c:'c1',n:'10 reps al 75% con series completas genera ya un tonelaje considerable. El avanzado absorbe este volumen desde la S1.'},
+      {t:'D1 S2 — SOBRECARGA + VOLUMEN',c:'c2',n:'Una serie más y menos reps = más tensión por rep con mayor volumen total. El avanzado necesita este doble estímulo.'},
+      {t:'D2 S2 — INTENSIDAD ASCENDENTE',c:'c2',n:'La doble progresión simultánea (fuerza + hipertrofia) es lo que diferencia un programa de avanzado.'},
+      {t:'D1 S3 — TENSIÓN EXTREMA',c:'c3',n:'3 reps con carga máxima. RPE 9. Activa la ruta mTOR al máximo. Recuperación entre series completa: 3–5 min.'},
+      {t:'D2 S3 — TENSIÓN HIPERTRÓFICA',c:'c3',n:'6 reps con carga alta (75% del peso más pesado). Estrés metabólico y mecánico máximo simultáneo.'},
+      {t:'D1 S4 — PICO ABSOLUTO',c:'c4',n:'2–3 reps con el peso más alto del bloque. Overreaching real. Cada rep al límite técnico absoluto. Esta semana define el bloque.'},
+      {t:'D2 S4 — PICO DE VOLUMEN',c:'c4',n:'El tonelaje más alto de todo el bloque. La combinación con el pico D1 genera el estímulo adaptativo máximo. El deload es obligatorio.'},
+    ]
+  }
+};
+
+const ISO_REPS = {
+  principiante:{s1:15,s2:15,s3:20,s4:20},
+  intermedio:  {s1:15,s2:15,s3:20,s4:20},
+  avanzado:    {s1:15,s2:15,s3:20,s4:25},
+};
+const ISO_S = {s1:3,s2:4,s3:3,s4:4};
+const ISO_RPE = {
+  principiante:['6–7','rpe-low','7','rpe-low','7–8','rpe-mid','8','rpe-mid'],
+  intermedio:  ['7','rpe-low','7–8','rpe-mid','8','rpe-mid','8–9','rpe-high'],
+  avanzado:    ['7–8','rpe-mid','8','rpe-mid','8–9','rpe-high','9','rpe-peak'],
+};
+const ISO_FOCUS = ['Aprendizaje del rango completo','Volumen: +1 serie, mismas reps','Reps: salta a rango mayor, –1 serie','Pico: máximo volumen del bloque'];
+const ISO_NOTAS = {
+  principiante:[
+    {t:'S1 — RANGO COMPLETO',c:'c1',n:'15 reps con control total. Llega al fallo técnico en la rep 15. Si puedes hacer 18 sin problema, el peso es muy liviano.'},
+    {t:'S2 — SOBRECARGA DE VOLUMEN',c:'c2',n:'Mismas reps, una serie más. El tonelaje sube sin aumentar intensidad por rep. El músculo aislado necesita este acumulado.'},
+    {t:'S3 — SALTO DE REPS',c:'c3',n:'20 reps pero –1 serie temporalmente. Evita el colapso de volumen al aumentar reps. El esfuerzo percibido por serie sube considerablemente.'},
+    {t:'S4 — PICO DEL BLOQUE',c:'c4',n:'20 reps × 4 series. Tonelaje máximo. Las últimas 3–4 reps de cada serie deben ser al límite técnico. Próximo bloque: sube el peso.'},
+  ],
+  intermedio:[
+    {t:'S1 — BASE HIPERTRÓFICA',c:'c1',n:'15 reps en la zona clásica de hipertrofia. RPE 7: podrías hacer 3 reps más. Esta base permite acumular volumen sin fatiga excesiva.'},
+    {t:'S2 — VOLUMEN ASCENDENTE',c:'c2',n:'+1 serie sube el volumen total un 33%. Mantén la cadencia: 2–0–2 (excéntrico–pausa–concéntrico).'},
+    {t:'S3 — SALTO A 20 REPS',c:'c3',n:'20 reps genera máximo estrés metabólico y acumulación de lactato. –1 serie absorbe el salto sin exceder el volumen recuperable.'},
+    {t:'S4 — PICO METABÓLICO',c:'c4',n:'20 reps × 4 series. El músculo objetivo bajo el mayor estrés metabólico del bloque. Controla el tempo, no hagas trampa.'},
+  ],
+  avanzado:[
+    {t:'S1 — ACTIVACIÓN METABÓLICA',c:'c1',n:'15 reps al RPE 7–8 activa el músculo objetivo sin fatiga sistémica. El avanzado refina aquí la conexión mente-músculo.'},
+    {t:'S2 — VOLUMEN ALTO',c:'c2',n:'4 series × 15 reps. El avanzado puede sostener 4 series desde la S2. El tonelaje acumulado supera lo que un principiante hace en todo el bloque.'},
+    {t:'S3 — UMBRAL 20 REPS',c:'c3',n:'20 reps fuerza al músculo a reclutar fibras lentas y rápidas bajo estrés metabólico extremo. 3 series absorbe el salto sin exceder la recuperación.'},
+    {t:'S4 — PICO 25 REPS',c:'c4',n:'25 reps es el límite superior del espectro hipertrófico efectivo (Schoenfeld 2017). 4 series × 25 reps = uno de los estímulos más potentes para fibras tipo I.'},
+  ],
+};
+
+// ══════════════════════════════════════
+// EXERCISE ROW BUILDER
+// ══════════════════════════════════════
+let exCount = 0;
+
+function addExercise(name='', type='compound', lvl='intermedio', peso='', series='4', k='', pct=75) {
+  exCount++;
+  const id = exCount;
+  const unit = document.getElementById('g-unit').value;
+  const kSug = K_SUG[lvl][unit];
+
+  const div = document.createElement('div');
+  div.className = 'ex-row';
+  div.id = 'exrow-' + id;
+  div.innerHTML = `
+    <div class="ex-row-header">
+      <span class="ex-num">${id}</span>
+      <input class="ex-name-input" type="text" placeholder="Nombre del ejercicio…" value="${name}" id="ex-name-${id}">
+      <div class="type-toggle">
+        <button class="type-btn ${type==='compound'?'active-comp':''}" id="tbcomp-${id}" onclick="setType(${id},'compound')">🏋️ Compuesto</button>
+        <button class="type-btn ${type==='isolated'?'active-iso':''}"  id="tbiso-${id}"  onclick="setType(${id},'isolated')">💪 Aislado</button>
+      </div>
+      <select class="lvl-mini" id="ex-lvl-${id}" onchange="onLvlChange(${id})">
+        <option value="principiante" ${lvl==='principiante'?'selected':''}>🌱 Principiante</option>
+        <option value="intermedio"   ${lvl==='intermedio'?'selected':''}>🔥 Intermedio</option>
+        <option value="avanzado"     ${lvl==='avanzado'?'selected':''}>⚡ Avanzado</option>
+      </select>
+      <button class="del-btn" onclick="delExercise(${id})" title="Eliminar">✕</button>
+    </div>
+
+    <!-- COMPOUND EXTRA -->
+    <div class="ex-comp-extra" id="ex-comp-extra-${id}" style="display:${type==='compound'?'grid':'none'}">
+      <div class="ex-field">
+        <label>Peso Inicial D1</label>
+        <div class="irow">
+          <input class="ex-param" type="number" id="ex-peso-${id}" placeholder="0.0" min="0" step="0.5" value="${peso}" style="width:80px">
+          <select class="ex-param" id="ex-unit-${id}" style="width:54px;border-radius:0 3px 3px 0;border-left:none">${unitOpts(unit)}</select>
+        </div>
+      </div>
+      <div class="ex-field">
+        <label>Series Iniciales (S)</label>
+        <input class="ex-param" type="number" id="ex-series-${id}" placeholder="4" min="1" max="10" step="1" value="${series}" style="width:80px">
+      </div>
+      <div class="ex-field">
+        <label>Incremento (K)</label>
+        <div class="irow">
+          <input class="ex-param" type="number" id="ex-k-${id}" placeholder="${kSug}" min="0" step="0.25" value="${k||kSug}" style="width:80px" data-auto="1">
+          <select class="ex-param" id="ex-kunit-${id}" style="width:54px;border-radius:0 3px 3px 0;border-left:none">${unitOpts(unit)}</select>
+        </div>
+        <div class="k-sug" id="ex-ksug-${id}">→ Sug. ${kSug} ${unit}</div>
+      </div>
+      <div class="ex-field">
+        <label>% Día 2 (Hipert.)</label>
+        <div class="pct-wrap">
+          <input type="range" min="60" max="90" value="${pct}" step="5" oninput="onExPct(${id},this.value)">
+          <span class="pct-disp" id="ex-pct-disp-${id}" style="font-size:16px">${pct}%</span>
+          <input type="hidden" id="ex-pct-${id}" value="${pct}">
+        </div>
+      </div>
+    </div>
+
+    <!-- ISOLATED EXTRA -->
+    <div id="ex-iso-extra-${id}" style="display:${type==='isolated'?'grid':'none'};grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;padding:10px 14px 14px 52px;border-top:1px solid var(--border2);background:rgba(77,159,255,.01)">
+      <div class="ex-field">
+        <label>Peso Inicial</label>
+        <div class="irow">
+          <input class="ex-param" type="number" id="ex-peso-iso-${id}" placeholder="0.0" min="0" step="0.5" value="${peso}" style="width:80px">
+          <select class="ex-param" id="ex-unit-iso-${id}" style="width:54px;border-radius:0 3px 3px 0;border-left:none">${unitOpts(unit)}</select>
+        </div>
+      </div>
+      <div class="ex-field">
+        <label>Incremento Siguiente Bloque (K)</label>
+        <div class="irow">
+          <input class="ex-param" type="number" id="ex-kiso-${id}" placeholder="${kSug}" min="0" step="0.25" value="${k||kSug}" style="width:80px" data-auto="1">
+          <select class="ex-param" id="ex-kunit-iso-${id}" style="width:54px;border-radius:0 3px 3px 0;border-left:none">${unitOpts(unit)}</select>
+        </div>
+        <div class="k-sug" id="ex-ksug-iso-${id}">→ Sug. ${kSug} ${unit}</div>
+      </div>
+      <div class="ex-field" style="grid-column:1/-1">
+        <div style="padding:10px 12px;background:rgba(77,159,255,.05);border:1px solid rgba(77,159,255,.12);border-radius:3px;font-family:var(--mono);font-size:9px;color:var(--muted)">
+          Lógica doble progresión: S1: 15×3 → S2: 15×4 → S3: 20×3 → S4: 20×4 (avanzados hasta 25 reps)
+        </div>
+      </div>
+    </div>
+  `;
+  document.getElementById('ex-list').appendChild(div);
+
+  // bind K manual edit
+  document.getElementById('ex-k-'+id).addEventListener('input', function(){ delete this.dataset.auto; });
+  document.getElementById('ex-kiso-'+id).addEventListener('input', function(){ delete this.dataset.auto; });
+  updateExNums();
+}
+
+function unitOpts(sel) {
+  return `<option value="kg" ${sel==='kg'?'selected':''}>kg</option><option value="lb" ${sel==='lb'?'selected':''}>lb</option>`;
+}
+
+function setType(id, type) {
+  document.getElementById('tbcomp-'+id).className = 'type-btn' + (type==='compound'?' active-comp':'');
+  document.getElementById('tbiso-'+id).className  = 'type-btn' + (type==='isolated'?' active-iso':'');
+  document.getElementById('ex-comp-extra-'+id).style.display = type==='compound' ? 'grid' : 'none';
+  document.getElementById('ex-iso-extra-'+id).style.display  = type==='isolated' ? 'grid' : 'none';
+}
+
+function getType(id) {
+  return document.getElementById('tbcomp-'+id).classList.contains('active-comp') ? 'compound' : 'isolated';
+}
+
+function delExercise(id) {
+  const el = document.getElementById('exrow-'+id);
+  if (el) el.remove();
+  updateExNums();
+}
+
+function updateExNums() {
+  const rows = document.querySelectorAll('.ex-row');
+  rows.forEach((r,i) => r.querySelector('.ex-num').textContent = i+1);
+}
+
+function onLvlChange(id) {
+  const lvl  = document.getElementById('ex-lvl-'+id).value;
+  const unit = document.getElementById('ex-unit-'+id)?.value || document.getElementById('g-unit').value;
+  const sug  = K_SUG[lvl][unit];
+  const kEl  = document.getElementById('ex-k-'+id);
+  const kIso = document.getElementById('ex-kiso-'+id);
+  if (kEl && kEl.dataset.auto !== undefined) kEl.value = sug;
+  if (kIso && kIso.dataset.auto !== undefined) kIso.value = sug;
+  const s1 = document.getElementById('ex-ksug-'+id);
+  const s2 = document.getElementById('ex-ksug-iso-'+id);
+  if (s1) s1.textContent = `→ Sug. ${sug} ${unit}`;
+  if (s2) s2.textContent = `→ Sug. ${sug} ${unit}`;
+}
+
+function onExPct(id, v) {
+  document.getElementById('ex-pct-disp-'+id).textContent = v + '%';
+  document.getElementById('ex-pct-'+id).value = v;
+}
+
+function onGlobalUnit() {
+  const u = document.getElementById('g-unit').value;
+  document.querySelectorAll('.ex-row').forEach(row => {
+    const id = row.id.replace('exrow-','');
+    ['ex-unit-'+id,'ex-kunit-'+id,'ex-unit-iso-'+id,'ex-kunit-iso-'+id].forEach(sid => {
+      const el = document.getElementById(sid); if (el) el.value = u;
+    });
+    onLvlChange(id);
+  });
+}
+
+function onGlobalPct(v) {
+  document.getElementById('g-pct-disp').textContent = v + '%';
+  document.querySelectorAll('[id^="ex-pct-"]').forEach(el => {
+    if (!el.type || el.type==='hidden') return;
+    el.value = v;
+    const id = el.id.replace('ex-pct-','');
+    onExPct(id, v);
+  });
+}
+
+// ══════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════
+function avgR(r) {
+  if (String(r).includes('–')) { const [a,b]=String(r).split('–').map(Number); return (a+b)/2; }
+  return +r;
+}
+function roundK(v,k) { if (!k||k<=0) return +v.toFixed(2); return Math.round(v/k)*k; }
+
+function getExIds() {
+  return [...document.querySelectorAll('.ex-row')].map(r => r.id.replace('exrow-',''));
+}
+
+// ══════════════════════════════════════
+// VALIDATE
+// ══════════════════════════════════════
+function validar() {
+  const ids = getExIds();
+  if (!ids.length) { alert('Añade al menos un ejercicio.'); return false; }
+  let ok = true;
+  ids.forEach(id => {
+    const type = getType(id);
+    const pesoEl = document.getElementById(type==='compound'?`ex-peso-${id}`:`ex-peso-iso-${id}`);
+    const kEl    = document.getElementById(type==='compound'?`ex-k-${id}`:`ex-kiso-${id}`);
+    [pesoEl, kEl].forEach(el => {
+      if (!el) return;
+      const v = parseFloat(el.value);
+      const bad = !el.value || isNaN(v) || v <= 0;
+      el.classList.toggle('invalid', bad);
+      if (bad) ok = false;
+    });
+    const nameEl = document.getElementById(`ex-name-${id}`);
+    if (!nameEl.value.trim()) { nameEl.classList.add('invalid'); ok = false; }
+    else nameEl.classList.remove('invalid');
+    if (type==='compound') {
+      const sEl = document.getElementById(`ex-series-${id}`);
+      const sv = parseInt(sEl.value);
+      const bad = !sEl.value || isNaN(sv) || sv<1 || sv>10;
+      sEl.classList.toggle('invalid', bad);
+      if (bad) ok = false;
+    }
+  });
+  if (!ok) alert('Revisa los campos marcados en rojo.');
+  return ok;
+}
+
+// ══════════════════════════════════════
+// GENERATE
+// ══════════════════════════════════════
+function generar() {
+  if (!validar()) return;
+  const ids   = getExIds();
+  const deload = document.getElementById('g-deload').checked;
+  const atleta = document.getElementById('g-atleta').value.trim();
+  const output = document.getElementById('routine-output');
+  output.innerHTML = '';
+
+  let totalTonAll = 0, totalExComp = 0, totalExIso = 0;
+
+  ids.forEach((id, idx) => {
+    const type  = getType(id);
+    const name  = document.getElementById(`ex-name-${id}`).value.trim();
+    const lvl   = document.getElementById(`ex-lvl-${id}`).value;
+    type === 'compound' ? totalExComp++ : totalExIso++;
+
+    const blockDiv = document.createElement('div');
+    blockDiv.className = 'ex-block';
+
+    // divider
+    if (idx > 0) {
+      const div = document.createElement('div');
+      div.className = 'routine-divider';
+      div.innerHTML = `<div class="line"></div><div class="label">EJERCICIO ${idx+1}</div><div class="line"></div>`;
+      output.appendChild(div);
+    }
+
+    // header
+    const lvlTagCls = lvl==='principiante'?'etag-lvl-p':lvl==='intermedio'?'etag-lvl-i':'etag-lvl-a';
+    const lvlEmoji  = lvl==='principiante'?'🌱':lvl==='intermedio'?'🔥':'⚡';
+    blockDiv.innerHTML = `
+      <div class="ex-block-header">
+        <div class="ex-block-num">${String(idx+1).padStart(2,'0')}</div>
+        <div class="ex-block-info">
+          <div class="ex-block-name">${name.toUpperCase()}</div>
+          <div class="ex-block-tags">
+            <span class="etag ${type==='compound'?'etag-comp':'etag-iso'}">${type==='compound'?'🏋️ Compuesto':'💪 Aislado'}</span>
+            <span class="etag ${lvlTagCls}">${lvlEmoji} ${lvl.charAt(0).toUpperCase()+lvl.slice(1)}</span>
+            ${type==='compound'?'<span class="etag etag-freq">⚡ Frec. 2</span>':''}
+          </div>
+        </div>
+      </div>`;
+
+    // table + notes
+    let tblHTML, notasHTML, blockTon;
+    if (type === 'compound') {
+      const r = buildCompound(id, lvl, deload);
+      tblHTML   = r.tbl;
+      notasHTML = r.notas;
+      blockTon  = r.ton;
+    } else {
+      const r = buildIsolated(id, lvl, deload);
+      tblHTML   = r.tbl;
+      notasHTML = r.notas;
+      blockTon  = r.ton;
+    }
+    totalTonAll += blockTon;
+
+    blockDiv.innerHTML += `
+      <div class="tbl-wrap"><table>
+        <thead><tr>
+          <th>Sem.</th><th>Día / Tipo</th><th>Peso</th><th>Series × Reps</th><th>Tonelaje</th><th>RPE</th><th>Enfoque</th>
+        </tr></thead>
+        <tbody>${tblHTML}</tbody>
+      </table></div>
+      <div class="notes">
+        <div class="notes-hd"><div class="dot"></div><h3>NOTAS ENTRENADOR OSNEIDER — ${name.toUpperCase()}</h3></div>
+        ${notasHTML}
+      </div>`;
+    output.appendChild(blockDiv);
+  });
+
+  // summary
+  document.getElementById('summary').innerHTML = `
+    <div class="scard"><div class="scard-lbl">Ejercicios</div><div class="scard-val">${ids.length}</div><div class="scard-sub">en la rutina</div></div>
+    <div class="scard"><div class="scard-lbl">Compuestos</div><div class="scard-val">${totalExComp}</div><div class="scard-sub">Frec. 2 — D1+D2</div></div>
+    <div class="scard"><div class="scard-lbl">Aislados</div><div class="scard-val">${totalExIso}</div><div class="scard-sub">Doble progresión</div></div>
+    <div class="scard"><div class="scard-lbl">Semanas</div><div class="scard-val">${deload?5:4}</div><div class="scard-sub">${deload?'con deload':'sin deload'}</div></div>
+    <div class="scard"><div class="scard-lbl">Tonelaje Total</div><div class="scard-val">${(Math.round(totalTonAll/100)/10)}k</div><div class="scard-sub">${document.getElementById('g-unit').value} acumulados</div></div>
+  `;
+
+  const res = document.getElementById('result');
+  res.classList.add('on');
+  setTimeout(() => res.scrollIntoView({behavior:'smooth',block:'start'}), 120);
+}
+
+// ──────────────────────────────────────
+// BUILD COMPOUND TABLE
+// ──────────────────────────────────────
+function buildCompound(id, lvl, deload) {
+  const P   = parseFloat(document.getElementById(`ex-peso-${id}`).value);
+  const S   = parseInt(document.getElementById(`ex-series-${id}`).value);
+  const K   = parseFloat(document.getElementById(`ex-k-${id}`).value);
+  const u   = document.getElementById(`ex-unit-${id}`).value;
+  const pct = parseInt(document.getElementById(`ex-pct-${id}`).value);
+  const cfg = COMP[lvl];
+  let rows  = '', ton = 0;
+  const pesosD1 = [];
+
+  cfg.semanas.forEach((s, i) => {
+    const pD1 = P + (i === 0 ? 0 : i === 1 ? 1 : 2) * K;
+    const sD1 = S + s.sΔD1;
+    const rD1a = avgR(s.rD1);
+    const tD1  = +(pD1 * sD1 * rD1a).toFixed(1);
+    ton += tD1;
+    pesosD1.push(pD1);
+
+    const pD2 = roundK(pD1 * pct / 100, K);
+    const sD2 = S + s.sΔD2;
+    const rD2a = avgR(s.rD2);
+    const tD2  = +(pD2 * sD2 * rD2a).toFixed(1);
+    ton += tD2;
+
+    const peak = !!s.peak;
+    rows += `
+      <tr class="r-d1${peak?' r-peak':''}">
+        <td><div class="wk">${i+1}<div class="wk-sub d1c">DÍA 1</div></div></td>
+        <td><span class="day-badge db-f">FUERZA</span></td>
+        <td><span class="vbig">${pD1}</span><span class="vunit">${u}</span></td>
+        <td><span class="vbig">${sD1}</span><span class="vunit">×</span><span class="vbig">${s.rD1}</span></td>
+        <td><span class="ton">${tD1.toLocaleString()} <small>${u}</small></span></td>
+        <td><span class="rpe ${s.clD1}">RPE ${s.rpeD1}</span></td>
+        <td><span class="focus">${s.eD1}</span></td>
+      </tr>
+      <tr class="r-d2${peak?' r-peak':''}">
+        <td><div class="wk-sub d2c" style="padding-left:2px">DÍA 2</div></td>
+        <td><span class="day-badge db-h">HIPERT.</span></td>
+        <td><span class="vbig">${pD2}</span><span class="vunit">${u}</span></td>
+        <td><span class="vbig">${sD2}</span><span class="vunit">×</span><span class="vbig">${s.rD2}</span></td>
+        <td><span class="ton">${tD2.toLocaleString()} <small>${u}</small></span></td>
+        <td><span class="rpe ${s.clD2}">RPE ${s.rpeD2}</span></td>
+        <td><span class="focus">${s.eD2}</span></td>
+      </tr>
+      <tr class="r-sep"><td colspan="7"></td></tr>`;
+  });
+
+  if (deload) {
+    const pkD1 = pesosD1[3];
+    const dlD1 = roundK(pkD1 * 0.55, K);
+    const dlS  = Math.max(2, Math.ceil(S * 0.6));
+    const dlD2 = roundK(dlD1 * pct / 100, K);
+    [['D1',dlD1,'8','db-d'],['D2',dlD2,'12','db-d']].forEach(([d,p,r,bc]) => {
+      const t = +(p * dlS * +r).toFixed(1); ton += t;
+      rows += `
+        <tr class="r-dl">
+          <td><div class="wk">5<div class="wk-sub dlc">${d}</div></div></td>
+          <td><span class="day-badge ${bc}">DELOAD</span></td>
+          <td><span class="vbig">${p}</span><span class="vunit">${u}</span></td>
+          <td><span class="vbig">${dlS}</span><span class="vunit">×</span><span class="vbig">${r}</span></td>
+          <td><span class="ton">${t.toLocaleString()} <small>${u}</small></span></td>
+          <td><span class="rpe rpe-dl">RPE 4–5</span></td>
+          <td><span class="focus">${d==='D1'?'Descarga — patrón motor':'Descarga — flujo sanguíneo'}</span></td>
+        </tr>`;
+    });
+  }
+
+  const notas = [...cfg.notas];
+  if (deload) notas.push({t:'S5 — DELOAD OBLIGATORIO',c:'c5',n:'El deload es donde el cuerpo asimila el estrés del bloque y produce la supercompensación. Reduce peso al 55%, volumen al 60%. Duerme, come y recupera.'});
+  const notasHTML = notas.map((n,i) => `
+    <div class="note-row">
+      <div class="note-wk"><span>S${Math.floor(i/2)+1}</span></div>
+      <div class="note-cnt"><div class="note-ttl ${n.c}">${n.t}</div><div class="note-txt">${n.n}</div></div>
+    </div>`).join('');
+
+  return {tbl:rows, notas:notasHTML, ton};
+}
+
+// ──────────────────────────────────────
+// BUILD ISOLATED TABLE
+// ──────────────────────────────────────
+function buildIsolated(id, lvl, deload) {
+  const P   = parseFloat(document.getElementById(`ex-peso-iso-${id}`).value);
+  const K   = parseFloat(document.getElementById(`ex-kiso-${id}`).value);
+  const u   = document.getElementById(`ex-unit-iso-${id}`).value;
+  const reps = ISO_REPS[lvl];
+  const rpe  = ISO_RPE[lvl];
+  let rows   = '', ton = 0;
+
+  const semDefs = [
+    {r:reps.s1,s:ISO_S.s1,rv:rpe[0],rc:rpe[1]},
+    {r:reps.s2,s:ISO_S.s2,rv:rpe[2],rc:rpe[3]},
+    {r:reps.s3,s:ISO_S.s3,rv:rpe[4],rc:rpe[5]},
+    {r:reps.s4,s:ISO_S.s4,rv:rpe[6],rc:rpe[7]},
+  ];
+
+  semDefs.forEach((sd, i) => {
+    const t = +(P * sd.s * sd.r).toFixed(1); ton += t;
+    const peak = i === 3;
+    rows += `
+      <tr class="${peak?'r-peak':''}">
+        <td><div class="wk">${i+1}<div class="wk-sub isoc">AISLADO</div></div></td>
+        <td><span class="day-badge db-i">HIPERT.</span></td>
+        <td><span class="vbig">${P}</span><span class="vunit">${u}</span></td>
+        <td><span class="vbig">${sd.s}</span><span class="vunit">×</span><span class="vbig">${sd.r}</span></td>
+        <td><span class="ton">${t.toLocaleString()} <small>${u}</small></span></td>
+        <td><span class="rpe ${sd.rc}">RPE ${sd.rv}</span></td>
+        <td><span class="focus">${ISO_FOCUS[i]}</span></td>
+      </tr>
+      <tr class="r-sep"><td colspan="7"></td></tr>`;
+  });
+
+  if (deload) {
+    const dlP = roundK(P * 0.6, K);
+    const t   = +(dlP * 2 * 15).toFixed(1); ton += t;
+    rows += `
+      <tr class="r-dl">
+        <td><div class="wk">5<div class="wk-sub dlc">DELOAD</div></div></td>
+        <td><span class="day-badge db-d">DELOAD</span></td>
+        <td><span class="vbig">${dlP}</span><span class="vunit">${u}</span></td>
+        <td><span class="vbig">2</span><span class="vunit">×</span><span class="vbig">15</span></td>
+        <td><span class="ton">${t.toLocaleString()} <small>${u}</small></span></td>
+        <td><span class="rpe rpe-dl">RPE 4–5</span></td>
+        <td><span class="focus">Descarga activa — flujo</span></td>
+      </tr>`;
+  }
+
+  const notas = [...ISO_NOTAS[lvl]];
+  if (deload) notas.push({t:'S5 — DELOAD AISLADOS',c:'c5',n:`2 series × 15 reps al 60% del peso (${dlPStr(P,K)} ${u}). Mantén el rango articular activo y drena la fatiga acumulada. Próximo bloque: +${K} ${u} desde S1.`});
+  const notasHTML = notas.map((n,i) => `
+    <div class="note-row">
+      <div class="note-wk"><span>S${i+1}</span></div>
+      <div class="note-cnt"><div class="note-ttl ${n.c}">${n.t}</div><div class="note-txt">${n.n}</div></div>
+    </div>`).join('');
+
+  return {tbl:rows, notas:notasHTML, ton};
+}
+
+function dlPStr(P,K){ return roundK(P*0.6,K); }
+
+// ══════════════════════════════════════
+// COPY
+// ══════════════════════════════════════
+function copiar() {
+  const tables = document.querySelectorAll('#routine-output table');
+  let text = '';
+  tables.forEach((tbl, i) => {
+    const block = tbl.closest('.ex-block');
+    const name  = block ? block.querySelector('.ex-block-name')?.textContent : `Ejercicio ${i+1}`;
+    text += `\n\n═══ ${name} ═══\n`;
+    [...tbl.querySelectorAll('tr')].forEach(r => {
+      const cells = [...r.querySelectorAll('th,td')];
+      text += cells.map(c => c.innerText.replace(/\n/g,' ').trim()).join('\t') + '\n';
+    });
+  });
+  navigator.clipboard.writeText(text.trim()).then(() => {
+    const b = document.getElementById('btn-copy');
+    b.classList.add('ok');
+    b.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> ¡Copiado!`;
+    setTimeout(() => {
+      b.classList.remove('ok');
+      b.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copiar Todo`;
+    }, 2500);
+  });
+}
+
+// ══════════════════════════════════════
+// CLEAR
+// ══════════════════════════════════════
+function limpiar() {
+  document.getElementById('ex-list').innerHTML = '';
+  document.getElementById('g-atleta').value = '';
+  document.getElementById('g-deload').checked = true;
+  document.getElementById('g-pct').value = 75;
+  onGlobalPct(75);
+  document.getElementById('g-unit').value = 'kg';
+  document.getElementById('result').classList.remove('on');
+  exCount = 0;
+  // Add 3 default rows
+  addExercise(); addExercise(); addExercise();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ══════════════════════════════════════
+// INIT — default exercises
+// ══════════════════════════════════════
+addExercise('Hip Thrust', 'compound', 'intermedio');
+addExercise('Sentadilla Sumo', 'compound', 'intermedio');
+addExercise('Curl Femoral Sentado', 'isolated', 'intermedio');
+addExercise('Extensiones de Cuádriceps', 'isolated', 'intermedio');
+</script>
+</body>
+</html>
